@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Input;
 import com.example.model.Output;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,11 +28,11 @@ public class AdditionController {
 
     private int addGivenIntegers(@RequestBody Input input) {
         int result;
-        try {
-            result = (input.getNumber1()!=null ? Integer.parseInt(input.getNumber1()) :0 ) + ( input.getNumber2()!=null ? Integer.parseInt(input.getNumber2()) :0);
-        }catch (NumberFormatException ex){
-            throw new NumberFormatException();
-        }
+//        try {
+            result = (StringUtils.hasLength(input.getNumber1())? Integer.parseInt(input.getNumber1()) :0 ) + (StringUtils.hasLength(input.getNumber2()) ? Integer.parseInt(input.getNumber2()) :0);
+//        }catch (NumberFormatException ex){
+//            throw new NumberFormatException();
+//        }
         return result;
     }
 

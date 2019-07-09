@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.example.validator.PositiveNumber;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -12,13 +14,11 @@ import javax.validation.constraints.NotNull;
 
 public class Input {
 
-    @Max(1000)
-    @Min(value = 0L, message = "The value must be positive")
+    @PositiveNumber
     @Valid
     public String number1;
 
-    @Max(1000)
-    @Min(value = 0L, message = "The value must be positive")
+    @PositiveNumber
     public String number2;
 
     public Input(String number1, String number2) {

@@ -62,7 +62,7 @@ public class AdditionControllerTest {
     @Test
     public void testAddWithOneEmptyvalue() throws Exception {
         Input input = new Input();
-        input.setNumber1(null);
+        input.setNumber1("");
         input.setNumber2("2");
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -82,10 +82,31 @@ public class AdditionControllerTest {
 
 
     @Test
-    public void testAddWithEmptyObject() throws Exception {
+    public void testAddWithNullObject() throws Exception {
         Input input = new Input();
         input.setNumber1(null);
         input.setNumber2(null);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/sum")
+                .accept(MediaType.APPLICATION_JSON).content(mapToJson(input))
+                .contentType(MediaType.APPLICATION_JSON);
+
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        Output output = mapFromJson(result.getResponse().getContentAsString(), Output.class);
+
+        assertEquals(200, result.getResponse().getStatus());
+        //Response should be equal to 2 as one input is null
+        assertEquals("0", output.getResult());
+
+    }
+
+    @Test
+    public void testAddWithEmptyValues() throws Exception {
+        Input input = new Input();
+        input.setNumber1("");
+        input.setNumber2("");
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/sum")
