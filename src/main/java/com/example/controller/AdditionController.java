@@ -8,10 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-
-/**
- * Created by pf46pnd on 22/05/2019.
- */
 @RestController
 public class AdditionController {
 

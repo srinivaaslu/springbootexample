@@ -5,9 +5,6 @@ import org.springframework.util.StringUtils;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-/**
- * Created by pf46pnd on 9/07/2019.
- */
 
 public class ValidatorForNumber implements ConstraintValidator<PositiveNumber, String> {
 

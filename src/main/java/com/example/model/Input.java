@@ -7,9 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by pf46pnd on 22/05/2019.
- */
 
 
 public class Input {

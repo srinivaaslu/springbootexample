@@ -2,9 +2,6 @@ package com.example.exception;
 
 import java.util.List;
 
-/**
- * Created by pf46pnd on 4/07/2019.
- */
 public class ErrorResponse {
 
     private String message;

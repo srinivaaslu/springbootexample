@@ -9,9 +9,6 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * Created by pf46pnd on 9/07/2019.
- */
 @Target({FIELD})
 @Retention(RUNTIME)
 @Constraint(validatedBy = ValidatorForNumber.class)

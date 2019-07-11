@@ -7,15 +7,13 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by pf46pnd on 4/07/2019.
- */
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
 
@@ -35,6 +33,26 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
         }
         ErrorResponse error = new ErrorResponse("Validation Failed", details);
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProcessingException.class)
+    public final ResponseEntity<Object>  handleNumberFormatException(ProcessingException exception){
+        List<String> details = new ArrayList<>();
+        details.add(exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("Json Parse exception happend",details);
+        return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RestClientException.class)
+    public final ResponseEntity<Object>  handleRestClientException(RestClientException exception){
+        ErrorDetails errorResponse = new ErrorDetails("ERROR",exception.getMessage());
+        return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(InvalidInputParameter.class)
+    public final ResponseEntity<Object>  handleInvalidInputParameter(InvalidInputParameter exception){
+        ErrorDetails errorResponse = new ErrorDetails("ERROR",exception.getMessage());
+        return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
