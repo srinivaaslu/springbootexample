@@ -6,7 +6,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,10 +20,11 @@ import java.util.List;
 public class CloudService {
 
     @Autowired
+    @Qualifier("restTemplateReadTimeout")
     private RestTemplate restTemplate;
 
     public static String REST_ENDPOINT_URL_1="https://api.run.pivotal.io/v2/info";
-    public static String REST_ENDPOINT_URL_2="https://api.ng.bluemix.net/v2/info";
+    public static String REST_ENDPOINT_URL_2="https://api.ng.bluemix.net/v2/info2";
 
     protected <T> T mapFromJson(String json, Class<T> clazz) throws JsonMappingException ,JsonParseException,IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -31,16 +34,25 @@ public class CloudService {
     public List<ApiResponse> getAllApiResponseInfo() {
 
         List<ApiResponse> apiResponseList = new ArrayList<>();
+        extractAPIResponseToOutputList(apiResponseList, REST_ENDPOINT_URL_1);
+        extractAPIResponseToOutputList(apiResponseList, REST_ENDPOINT_URL_2);
 
-        String jsonResponse = getResponseFromRestClient(REST_ENDPOINT_URL_1);
-        ApiResponse apiResponse1 = mapResponseToPojo(jsonResponse);
-        apiResponseList.add(apiResponse1);
-
-        String jsonResponse2 = getResponseFromRestClient(REST_ENDPOINT_URL_2);
-        ApiResponse apiResponse2 = mapResponseToPojo(jsonResponse2);
-        apiResponseList.add(apiResponse2);
 
         return apiResponseList;
+    }
+
+    private void extractAPIResponseToOutputList(List<ApiResponse> apiResponseList, String endpointURL) {
+        String jsonResponse=null;
+        try {
+            jsonResponse = getResponseFromRestClient(REST_ENDPOINT_URL_1);
+        }catch(RestClientException ex){
+            ApiResponse errorResponse = new ApiResponse("Error occur while accessing Link ","Error occur while accessing"+endpointURL);
+            apiResponseList.add(errorResponse);
+        }
+        if(jsonResponse!=null) {
+            ApiResponse apiResponse = mapResponseToPojo(jsonResponse);
+            apiResponseList.add(apiResponse);
+        }
     }
 
     public ApiResponse getSpecificApiResponseInfo(String code) {
@@ -71,7 +83,11 @@ public class CloudService {
         try {
             jsonRsponse = restTemplate.getForObject(restEndPointUrl, String.class);
         }catch(RestClientException ex){
-            throw new RestClientException("Connection exception occured while executing");
+            if(ex instanceof ResourceAccessException) {
+                throw new RestClientException("IO exception occurred while executing");
+            }else{
+                throw new RestClientException("Other exception occurred while executing");
+            }
         }
         return jsonRsponse;
     }

@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.exception.ProcessingException;
 import com.example.model.ApiResponse;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,9 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -46,9 +49,9 @@ public class CloudServiceTest {
     @Test
     public void testGetAllApiResponseInfoExceptionScenario(){
         given(restTemplate.getForObject(anyString(), any())).willThrow(RestClientException.class);
-        thrown.expect(RestClientException.class);
-        cloudService.getAllApiResponseInfo();
+        List<ApiResponse> allApisResponse = cloudService.getAllApiResponseInfo();
         verify(restTemplate,times(2)).getForObject(anyString(), any());
+        assertEquals(2,allApisResponse.size());
 
     }
     @Test
@@ -65,6 +68,21 @@ public class CloudServiceTest {
         given(restTemplate.getForObject(anyString(), any())).willReturn("\"description1\":\"Cloud Foundry sponsored by Pivotal\",\"apiversion\":\"2.138.0\",\"osbapi_version\":\"2.14\",\"routing_endpoint\":\"https://api.run.pivotal.io/routing\"");
         thrown.expect(ProcessingException.class);
         cloudService.getAllApiResponseInfo();
+        verify(restTemplate,times(1)).getForObject(anyString(), any());
+
+    }
+
+
+    @Test
+    public void testGetSpecificApiResponseInfoInExceptionCase(){
+        given(restTemplate.getForObject(anyString(), any())).willThrow(ResourceAccessException.class);
+        try {
+            cloudService.getSpecificApiResponseInfo("PWC");
+            Assert.fail();
+        }catch (RestClientException ex){
+            Assert.assertEquals("IO exception occurred while executing", ex.getMessage());
+        }
+
         verify(restTemplate,times(1)).getForObject(anyString(), any());
 
     }

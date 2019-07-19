@@ -39,7 +39,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
     public final ResponseEntity<Object>  handleNumberFormatException(ProcessingException exception){
         List<String> details = new ArrayList<>();
         details.add(exception.getMessage());
-        ErrorResponse errorResponse = new ErrorResponse("Json Parse exception happend",details);
+        ErrorResponse errorResponse = new ErrorResponse("Json Parse exception happened",details);
         return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
