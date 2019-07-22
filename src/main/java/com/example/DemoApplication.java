@@ -16,8 +16,8 @@ public class DemoApplication {
 	public RestTemplate restTemplateReadTimeout() {
 		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 		return restTemplateBuilder
-				.setConnectTimeout(Duration.ofSeconds(120))
-				.setReadTimeout(Duration.ofSeconds(120))
+				.setConnectTimeout(Duration.ofSeconds(10))
+				.setReadTimeout(Duration.ofSeconds(10))
 				.build();
 	}
 

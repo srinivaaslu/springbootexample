@@ -24,7 +24,7 @@ public class CloudService {
     private RestTemplate restTemplate;
 
     public static String REST_ENDPOINT_URL_1="https://api.run.pivotal.io/v2/info";
-    public static String REST_ENDPOINT_URL_2="https://api.ng.bluemix.net/v2/info2";
+    public static String REST_ENDPOINT_URL_2="https://api.ng.bluemix.net/v2/info";
 
     protected <T> T mapFromJson(String json, Class<T> clazz) throws JsonMappingException ,JsonParseException,IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,7 +44,7 @@ public class CloudService {
     private void extractAPIResponseToOutputList(List<ApiResponse> apiResponseList, String endpointURL) {
         String jsonResponse=null;
         try {
-            jsonResponse = getResponseFromRestClient(REST_ENDPOINT_URL_1);
+            jsonResponse = getResponseFromRestClient(endpointURL);
         }catch(RestClientException ex){
             ApiResponse errorResponse = new ApiResponse("Error occur while accessing Link ","Error occur while accessing"+endpointURL);
             apiResponseList.add(errorResponse);
@@ -78,18 +78,8 @@ public class CloudService {
     }
 
 
-    public String getResponseFromRestClient(String restEndPointUrl){
-        String jsonRsponse = null;
-        try {
-            jsonRsponse = restTemplate.getForObject(restEndPointUrl, String.class);
-        }catch(RestClientException ex){
-            if(ex instanceof ResourceAccessException) {
-                throw new RestClientException("IO exception occurred while executing");
-            }else{
-                throw new RestClientException("Other exception occurred while executing");
-            }
-        }
-        return jsonRsponse;
+    public String getResponseFromRestClient(String restEndPointUrl) throws RestClientException{
+            return restTemplate.getForObject(restEndPointUrl, String.class);
     }
 
 

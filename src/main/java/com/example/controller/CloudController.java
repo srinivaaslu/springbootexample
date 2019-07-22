@@ -37,7 +37,7 @@ public class CloudController {
 
 
     private void validatePathParam(String code) {
-        String pattern = "^PWC|BLU$";
+        String pattern = "^(?i)\\bPWC\\b|(?i)\\bBLU\\b$";
         // Create a Pattern object
         Pattern r = Pattern.compile(pattern);
         // Now create matcher object.

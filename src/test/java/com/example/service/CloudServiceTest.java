@@ -80,7 +80,7 @@ public class CloudServiceTest {
             cloudService.getSpecificApiResponseInfo("PWC");
             Assert.fail();
         }catch (RestClientException ex){
-            Assert.assertEquals("IO exception occurred while executing", ex.getMessage());
+            Assert.assertTrue(ex instanceof ResourceAccessException);
         }
 
         verify(restTemplate,times(1)).getForObject(anyString(), any());
