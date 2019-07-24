@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,6 +18,17 @@ public class ApiResponse {
 
     private String api_version;
 
+    @JsonIgnore
+    private String isError;
+
+    public String isError() {
+        return isError;
+    }
+
+    public void setIsError(String isError) {
+        this.isError = isError;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -25,12 +37,15 @@ public class ApiResponse {
         this.description = description;
     }
 
+
+
     public ApiResponse(){
 
     }
 
-    public ApiResponse(String description, String api_version) {
+    public ApiResponse(String description, String api_version,String isError) {
         this.description = description;
         this.api_version = api_version;
+        this.isError = isError;
     }
 }

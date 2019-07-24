@@ -46,7 +46,8 @@ public class CloudService {
         try {
             jsonResponse = getResponseFromRestClient(endpointURL);
         }catch(RestClientException ex){
-            ApiResponse errorResponse = new ApiResponse("Error occur while accessing Link ","Error occur while accessing"+endpointURL);
+            ApiResponse errorResponse = new ApiResponse("Error occur while accessing Link ","Error occur while accessing "+endpointURL,"true");
+            errorResponse.setIsError("true");
             apiResponseList.add(errorResponse);
         }
         if(jsonResponse!=null) {

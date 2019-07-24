@@ -56,7 +56,7 @@ public class CloudControllerTest {
     @Test
     public void testGetAPIResponse() throws Exception {
         List<ApiResponse> mockAPiResponse = new ArrayList<>();
-        mockAPiResponse.add(new ApiResponse("SampleAPI","version1"));
+        mockAPiResponse.add(new ApiResponse("SampleAPI","version1","false"));
 
         given(cloudService.getAllApiResponseInfo()).willReturn(mockAPiResponse);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cf");
@@ -69,7 +69,7 @@ public class CloudControllerTest {
     @Test
     public void testGetSpecificAPIResponseForPathParamPWC() throws Exception {
 
-        given(cloudService.getSpecificApiResponseInfo(anyString())).willReturn(new ApiResponse("SampleAPI","version1"));
+        given(cloudService.getSpecificApiResponseInfo(anyString())).willReturn(new ApiResponse("SampleAPI","version1","false"));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cf/pwc");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         ApiResponse output = mapFromJson(result.getResponse().getContentAsString(), ApiResponse.class);
@@ -81,7 +81,7 @@ public class CloudControllerTest {
     @Test
     public void testGetSpecificAPIResponseForPathParamBLU() throws Exception {
 
-        given(cloudService.getSpecificApiResponseInfo(anyString())).willReturn(new ApiResponse("SampleBLU","version1"));
+        given(cloudService.getSpecificApiResponseInfo(anyString())).willReturn(new ApiResponse("SampleBLU","version1","false"));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cf/blu");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         ApiResponse output = mapFromJson(result.getResponse().getContentAsString(), ApiResponse.class);
@@ -93,7 +93,7 @@ public class CloudControllerTest {
     @Test
     public void testGetSpecificAPIResponseForInvalidPathParam() throws Exception {
 
-        given(cloudService.getSpecificApiResponseInfo(anyString())).willReturn(new ApiResponse("SampleBLU","version1"));
+        given(cloudService.getSpecificApiResponseInfo(anyString())).willReturn(new ApiResponse("SampleBLU","version1","true"));
             RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cf/blusdf");
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             ErrorDetails output = mapFromJson(result.getResponse().getContentAsString(), ErrorDetails.class);

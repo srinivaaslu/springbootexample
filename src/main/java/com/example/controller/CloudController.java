@@ -4,10 +4,13 @@ import com.example.exception.InvalidInputParameter;
 import com.example.model.ApiResponse;
 import com.example.service.CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,10 +23,24 @@ public class CloudController {
 
 
     @GetMapping("/cf")
-    public List<ApiResponse> getApiResponseFromCloud() {
+    public ResponseEntity<List<ApiResponse>> getApiResponseFromCloud() {
 
-            return clouldService.getAllApiResponseInfo();
+        List<ApiResponse> apiResponses = clouldService.getAllApiResponseInfo();
+        long errorCount = apiResponses.stream().filter(x->x.isError().equals("true")).count();
+        final HttpStatus status = getStatusForOutput(errorCount);
+        return new ResponseEntity(apiResponses,status);
 
+    }
+
+    private HttpStatus getStatusForOutput(long errorCount) {
+
+        HttpStatus status =  HttpStatus.OK ;
+        if(errorCount == 1){
+            status = HttpStatus.PARTIAL_CONTENT ;
+        }else if(errorCount > 1){
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return status;
     }
 
 
